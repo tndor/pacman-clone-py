@@ -23,7 +23,7 @@ rewards = []
 
 for a in range(REWARD_SPACING, DISPLAY_HEIGHT, REWARD_SPACING):
     for b in range(REWARD_SPACING, DISPLAY_WIDHT, REWARD_SPACING):
-        reward_pos = pygame.Vector2(a, b)
+        reward_pos = pygame.Vector2(b, a)
         rewards.append(Reward(reward_pos, REWARD_RADIUS))
 
 #Initializing Player
@@ -49,7 +49,6 @@ while running:
     for reward in rewards:
         if pygame.Rect.colliderect(player.collider, reward.collider):
             rewards.remove(reward)
-            print(rewards)
         else:
             reward.draw(screen, REWARD_RADIUS)
     
