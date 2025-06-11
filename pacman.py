@@ -1,11 +1,12 @@
 import pygame
-from models import Player
+from models import Player, Reward
 
 DISPLAY_WIDHT = 900
 DISPLAY_HEIGHT = 600
 REWARD_SPACING = 70
 
 PLAYER_RADIUS = 20
+REWARD_RADIUS = 5
 
 #Initializing game
 pygame.init()
@@ -18,8 +19,12 @@ delta_time = 0
 direction = "" #Non moving direction
 
 # Rewards array
-rewards = [[(a,b) for a in range(REWARD_SPACING, DISPLAY_WIDHT, REWARD_SPACING)] for b in range(REWARD_SPACING, DISPLAY_HEIGHT, REWARD_SPACING)]
-print(rewards)
+rewards = []
+
+for a in range(REWARD_SPACING, DISPLAY_HEIGHT, REWARD_SPACING):
+    for b in range(REWARD_SPACING, DISPLAY_WIDHT, REWARD_SPACING):
+        reward_pos = pygame.Vector2(a, b)
+        rewards.append(Reward(reward_pos, REWARD_RADIUS))
 
 #Initializing Player
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
@@ -30,6 +35,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            
+    if rewards == []:
+        running = False
     
     #Draw the background
     screen.fill(pygame.Color("black"))
@@ -38,12 +46,12 @@ while running:
     player.draw(screen, PLAYER_RADIUS)
     
     #Draw Rewards
-    for i in range(len(rewards)):
-        for j in range(len(rewards[i])):
-            #if rewards[i][j] != 0 and :
-            #    rewards[i][j] = 0
-            #else:
-            pygame.draw.circle(screen, pygame.Color("white"), pygame.Vector2(rewards[i][j][0], rewards[i][j][1]), 5)
+    for reward in rewards:
+        if pygame.Rect.colliderect(player.collider, reward.collider):
+            rewards.remove(reward)
+            print(rewards)
+        else:
+            reward.draw(screen, REWARD_RADIUS)
     
     #Player movement
     keys = pygame.key.get_pressed()

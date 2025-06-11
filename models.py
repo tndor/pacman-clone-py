@@ -2,8 +2,6 @@ import pygame
 
 class Player:
     
-    position = pygame.Vector2(0, 0)
-    
     def __init__(self, position, player_radius):
         self.position = position
         
@@ -13,7 +11,7 @@ class Player:
         self.collider = pygame.Rect((col_x, col_y), (player_radius * 2, player_radius * 2))
     
     def draw(self, screen, radius):
-        pygame.draw.rect(screen, pygame.Color("green"), self.collider)
+        #pygame.draw.rect(screen, pygame.Color("green"), self.collider)
         pygame.draw.circle(screen, pygame.Color("yellow"), self.position, radius)  
     
     def check_movement_change(self, keys):
@@ -46,4 +44,16 @@ class Player:
         self.collider.center = (self.position.x, self.position.y)
             
             
+class Reward:
+ 
+    def __init__(self, position, reward_radius):
+        self.position = position
         
+        col_x = self.position.x - reward_radius
+        col_y = self.position.y - reward_radius
+        
+        self.collider = pygame.Rect((col_x, col_y), (reward_radius * 2, reward_radius * 2))
+        
+    def draw(self, screen, radius):
+        #pygame.draw.rect(screen, pygame.Color("green"), self.collider)
+        pygame.draw.circle(screen, pygame.Color("white"), self.position, radius)  
