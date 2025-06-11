@@ -1,5 +1,5 @@
 import pygame
-from models import Player, Reward
+from models import Player, Reward, Wall
 
 DISPLAY_WIDHT = 900
 DISPLAY_HEIGHT = 600
@@ -7,6 +7,7 @@ REWARD_SPACING = 70
 
 PLAYER_RADIUS = 20
 REWARD_RADIUS = 5
+WALL_RADIUS = 20
 
 #Initializing game
 pygame.init()
@@ -24,7 +25,10 @@ rewards = []
 for a in range(REWARD_SPACING, DISPLAY_HEIGHT, REWARD_SPACING):
     for b in range(REWARD_SPACING, DISPLAY_WIDHT, REWARD_SPACING):
         reward_pos = pygame.Vector2(b, a)
-        rewards.append(Reward(reward_pos, REWARD_RADIUS))
+        if a % 12 == 0 or a % 15 == 0:
+            rewards.append(Wall(reward_pos, WALL_RADIUS))
+        else:
+            rewards.append(Reward(reward_pos, REWARD_RADIUS))
 
 #Initializing Player
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
@@ -45,10 +49,13 @@ while running:
     #Draw Player
     player.draw(screen, PLAYER_RADIUS)
     
-    #Draw Rewards
+    #Draw Rewards and Check Collision
     for reward in rewards:
         if pygame.Rect.colliderect(player.collider, reward.collider):
-            rewards.remove(reward)
+            if type(reward) == Reward:
+                rewards.remove(reward)
+            elif type(reward) == Wall:
+                direction = ""
         else:
             reward.draw(screen, REWARD_RADIUS)
     

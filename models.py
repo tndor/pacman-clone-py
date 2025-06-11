@@ -57,3 +57,18 @@ class Reward:
     def draw(self, screen, radius):
         #pygame.draw.rect(screen, pygame.Color("green"), self.collider)
         pygame.draw.circle(screen, pygame.Color("white"), self.position, radius)  
+        
+        
+class Wall:
+ 
+    def __init__(self, position, reward_radius):
+        self.position = position
+        
+        col_x = self.position.x - reward_radius
+        col_y = self.position.y - reward_radius
+        
+        self.collider = pygame.Rect((col_x, col_y), (reward_radius * 2, reward_radius * 2))
+        
+    def draw(self, screen, radius):
+        #pygame.draw.rect(screen, pygame.Color("green"), self.collider)
+        pygame.draw.rect(screen, pygame.Color("white"), self.collider)  
