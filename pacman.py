@@ -7,7 +7,7 @@ REWARD_SPACING = 70
 
 PLAYER_RADIUS = 20
 REWARD_RADIUS = 5
-WALL_RADIUS = 20
+WALL_RADIUS = 30
 
 #Initializing game
 pygame.init()
@@ -49,23 +49,33 @@ while running:
     #Draw Player
     player.draw(screen, PLAYER_RADIUS)
     
-    #Draw Rewards and Check Collision
+    #Player movement
+    keys = pygame.key.get_pressed()
+    if direction != "":
+        last_direction = direction
+    movement = player.checkMovementChange(keys)
+    
+    if movement != None and player.is_colliding and movement == player.directions[last_direction]:
+        direction = movement 
+    elif movement != None and not player.is_colliding:
+        direction = movement
+    
+    #Draw Rewards and Walls
+    for reward in rewards:
+        reward.draw(screen, REWARD_RADIUS)
+        
+    #Checks for collision
     for reward in rewards:
         if pygame.Rect.colliderect(player.collider, reward.collider):
             if type(reward) == Reward:
                 rewards.remove(reward)
-            elif type(reward) == Wall:
+            if type(reward) == Wall:
+                player.is_colliding = True
                 direction = ""
-        else:
-            reward.draw(screen, REWARD_RADIUS)
-    
-    #Player movement
-    keys = pygame.key.get_pressed()
-    movement = player.check_movement_change(keys)
-    
-    if movement != None:
-        direction = movement
-    
+                player.position = player.last_position
+            else:
+                player.is_colliding = False
+            
     player.move(direction, delta_time)
 
     pygame.display.flip()

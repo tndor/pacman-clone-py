@@ -4,7 +4,15 @@ class Player:
     
     def __init__(self, position, player_radius):
         self.position = position
-        
+        self.last_position = self.position
+        self.directions = {"up": "down", 
+                           "down": "up", 
+                           "left": "right", 
+                           "right": "left",
+                           "": "abcd"
+                           }
+        self.is_colliding = False
+                
         col_x = self.position.x - player_radius
         col_y = self.position.y - player_radius
         
@@ -14,7 +22,7 @@ class Player:
         #pygame.draw.rect(screen, pygame.Color("green"), self.collider)
         pygame.draw.circle(screen, pygame.Color("yellow"), self.position, radius)  
     
-    def check_movement_change(self, keys):
+    def checkMovementChange(self, keys):
         direction = None
         
         if keys[pygame.K_w]:
@@ -30,18 +38,25 @@ class Player:
         
     def move(self, direction, delta_time):
         if direction == "up":
+            self.last_position = self.position
             self.position.y -= 300 * delta_time
             
         if direction == "down":
+            self.last_position = self.position
             self.position.y += 300 * delta_time
             
         if direction == "left":
+            self.last_position = self.position
             self.position.x -= 300 * delta_time
             
         if direction == "right":
+            self.last_position = self.position
             self.position.x += 300 * delta_time
             
         self.collider.center = (self.position.x, self.position.y)
+        
+    def getLastPosition(self):
+        return self.last_position
             
             
 class Reward:
