@@ -55,10 +55,7 @@ while running:
         last_direction = direction
     movement = player.checkMovementChange(keys)
     
-    if movement != None and player.is_colliding and movement == player.directions[last_direction]:
-        direction = movement 
-    elif movement != None and not player.is_colliding:
-        direction = movement
+    player.is_colliding = False
     
     #Draw Rewards and Walls
     for reward in rewards:
@@ -71,10 +68,15 @@ while running:
                 rewards.remove(reward)
             if type(reward) == Wall:
                 player.is_colliding = True
-                direction = ""
                 player.position = player.last_position
-            else:
-                player.is_colliding = False
+                if movement == player.directions[last_direction]:
+                    direction = movement
+                else:
+                    direction = ""
+                break
+            
+    if not player.is_colliding and movement is not None:
+        direction = movement
             
     player.move(direction, delta_time)
 
